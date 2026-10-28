@@ -5,6 +5,9 @@ from homeassistant.components.fan import (
     FanEntity,
     FanEntityFeature,
 )
+from homeassistant.config_entries import ConfigEntry
+from homeassistant.const import CONF_HOST
+from homeassistant.helpers.device_registry import CONNECTION_NETWORK_MAC, DeviceInfo
 from homeassistant.util.percentage import (
     ordered_list_item_to_percentage,
     percentage_to_ordered_list_item,
@@ -29,7 +32,10 @@ from .const import (
     ATTR_USED_INDEX,
     ATTR_WATER_LEVEL,
     ATTR_WICK_FILTER,
+    CONF_MAC,
+    DATA_PHILIPS_FANS,
     DEFAULT_ICON,
+    DOMAIN,
     DISPLAY_LIGHT_MAP,
     FUNCTION_MAP,
     MODE_MANUAL,
@@ -69,10 +75,21 @@ _LOGGER = logging.getLogger(__name__)
 class PhilipsAirPurifierFan(FanEntity):
     """philips_aurpurifier fan entity."""
 
-    def __init__(self, hass, client, name):
-        self.hass = hass
+    _attr_has_entity_name = True
+    _attr_name = None
+
+    def __init__(self, client, entry: ConfigEntry):
         self._client = client
-        self._name = name
+        self._host = entry.data[CONF_HOST]
+        mac = entry.data.get(CONF_MAC)
+
+        self._attr_unique_id = entry.unique_id or entry.entry_id
+        self._attr_device_info = DeviceInfo(
+            identifiers={(DOMAIN, self._attr_unique_id)},
+            connections={(CONNECTION_NETWORK_MAC, mac)} if mac else set(),
+            manufacturer="Philips",
+            name=entry.title,
+        )
 
         self._available = False
         self._state = None
@@ -101,18 +118,30 @@ class PhilipsAirPurifierFan(FanEntity):
         self._timer = None
         self._timer_remaining = None
 
+    async def async_added_to_hass(self):
+        self.hass.data[DATA_PHILIPS_FANS].append(self)
+
+    async def async_will_remove_from_hass(self):
+        self.hass.data[DATA_PHILIPS_FANS].remove(self)
+
     ### Update Fan attributes ###
 
     async def async_update(self):
-        """Fetch state from device."""
+        """Fetch state from device. Polled, so an offline purifier comes back
+        by itself; log only the transitions, not every failed poll."""
         try:
             await self._update_filters()
             await self._update_state()
             await self._update_model()
-            self._available = True
-        except Exception:
-            _LOGGER.error("Error updating the fan.", exc_info=True)
+        except Exception as exc:
+            if self._available:
+                _LOGGER.warning("Purifier at %s is unavailable: %s", self._host, exc)
             self._available = False
+            return
+
+        if not self._available:
+            _LOGGER.info("Purifier at %s is available", self._host)
+        self._available = True
 
     async def _update_filters(self):
         filters = await self.hass.async_add_executor_job(self._client.get_filters)
@@ -178,11 +207,6 @@ class PhilipsAirPurifierFan(FanEntity):
     def available(self):
         """Return True when state is known."""
         return self._available
-
-    @property
-    def name(self):
-        """Return the name of the device if any."""
-        return self._name
 
     @property
     def icon(self):
@@ -348,7 +372,7 @@ class PhilipsAirPurifierFan(FanEntity):
                 partial(self._client.set_values, values)
             )
         except Exception as exc:
-            _LOGGER.error("Error setting new values.", exc)
+            _LOGGER.error("Error setting new values on %s: %s", self._host, exc)
             self._available = False
             return False
 

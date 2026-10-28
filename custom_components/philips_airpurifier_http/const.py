@@ -1,8 +1,12 @@
-""" philips_airpurifier_http constants"""
+"""philips_airpurifier_http constants"""
 
 # Integration setup
 DOMAIN = "philips_airpurifier_http"
 DATA_PHILIPS_FANS = "fan.philips_airpurifier"
+CONF_MAC = "mac"
+
+# Seconds to wait for the purifier on each HTTP request
+REQUEST_TIMEOUT = 5
 
 # Integration defaults
 DEFAULT_NAME = "Philips AirPurifier"

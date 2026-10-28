@@ -1,0 +1,39 @@
+{
+  "config": {
+    "flow_title": "{name}",
+    "step": {
+      "user": {
+        "title": "Add Philips air purifier",
+        "description": "Enter the purifier's IP address. Give it a fixed IP or a DHCP reservation in your router so it doesn't move.",
+        "data": {
+          "host": "IP address",
+          "name": "Name"
+        }
+      },
+      "reconfigure": {
+        "title": "Change purifier IP address",
+        "data": {
+          "host": "IP address"
+        }
+      },
+      "discovery_confirm": {
+        "description": "Add {name} at {host}?"
+      }
+    },
+    "error": {
+      "cannot_connect": "The purifier didn't answer at this address. Check the IP and that it's powered on and on Wi-Fi.",
+      "wrong_device": "A different purifier answered at this address."
+    },
+    "abort": {
+      "already_configured": "This purifier is already configured.",
+      "reconfigure_successful": "IP address updated.",
+      "cannot_connect": "The purifier didn't answer."
+    }
+  },
+  "issues": {
+    "deprecated_yaml": {
+      "title": "Philips AirPurifier YAML configuration is deprecated",
+      "description": "Your `philips_airpurifier_http` fan configuration was imported into the UI. Remove the `fan:` entry with `platform: philips_airpurifier_http` from configuration.yaml and restart Home Assistant. To change the IP later, use Reconfigure on the integration."
+    }
+  }
+}

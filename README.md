@@ -21,19 +21,23 @@ Add this repo as a Custom Repository in HACS and install as an Integration from 
 
 ## Usage
 
+Go to **Settings → Devices & services → Add integration → Philips AirPurifier (HTTP)** and enter the purifier's IP address and a name. Purifiers announcing themselves over SSDP also show up as discovered.
+
+- **IP changed?** Use **Reconfigure** in the integration's ⋮ menu. It checks the new address answers and is the same purifier (by MAC). A rediscovered purifier at a new IP is updated automatically.
+- **Purifier offline?** No restart needed: if it's unreachable at startup, Home Assistant keeps retrying setup in the background; once set up, the fan goes `unavailable` while it's offline and comes back by itself.
+
+Give the purifier a DHCP reservation in your router so its IP doesn't drift.
+
+### YAML (deprecated)
+
+An existing YAML entry is imported into the UI automatically on startup; remove it from `configuration.yaml` afterwards.
+
 ```yaml
 fan:
   platform: philips_airpurifier_http
   host: 192.168.0.17
+  name: Philips Air Purifier # optional
 ```
-
-## Configuration variables
-
-| Field    | Value                      | Necessity  | Description                  |
-| -------- | -------------------------- | ---------- | ---------------------------- |
-| platform | `philips_airpurifier_http` | _Required_ | The platform name.           |
-| host     | 192.168.0.17               | _Required_ | IP address of your Purifier. |
-| name     | Philips Air Purifier       | Optional   | Name of the Fan.             |
 
 ---
 

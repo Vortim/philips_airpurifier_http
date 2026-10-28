@@ -1,9 +1,20 @@
 {
   "domain": "philips_airpurifier_http",
   "name": "Philips AirPurifier (HTTP)",
-  "documentation": "https://github.com/GeorgeSG/philips_airpurifier_http",
-  "issue_tracker": "https://github.com/GeorgeSG/philips_airpurifier_http/issues",
   "codeowners": ["@GeorgeSG"],
-  "requirements": ["py-air-control==2.2.0"],
-  "version": "1.4.2"
+  "config_flow": true,
+  "documentation": "https://github.com/GeorgeSG/philips_airpurifier_http",
+  "integration_type": "device",
+  "iot_class": "local_polling",
+  "issue_tracker": "https://github.com/GeorgeSG/philips_airpurifier_http/issues",
+  "requirements": ["py-air-control==2.3.0"],
+  "ssdp": [
+    {
+      "st": "urn:philips-com:device:DiProduct:1"
+    },
+    {
+      "deviceType": "urn:philips-com:device:DiProduct:1"
+    }
+  ],
+  "version": "1.5.0"
 }
