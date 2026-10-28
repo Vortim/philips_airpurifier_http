@@ -1,7 +1,7 @@
 {
   "domain": "philips_airpurifier_http",
   "name": "Philips AirPurifier (HTTP)",
-  "codeowners": ["@GeorgeSG"],
+  "codeowners": ["@Vortim"],
   "config_flow": true,
   "documentation": "https://github.com/Vortim/philips_airpurifier_http",
   "integration_type": "device",

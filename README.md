@@ -4,7 +4,7 @@
 
 ## Overview
 
-This is a hard fork of [xMrVizzy/philips-airpurifier](https://github.com/xMrVizzy/philips-airpurifier).
+This is a fork of [GeorgeSG/philips_airpurifier_http](https://github.com/GeorgeSG/philips_airpurifier_http), itself a hard fork of [xMrVizzy/philips-airpurifier](https://github.com/xMrVizzy/philips-airpurifier).
 
 This is a custom Home Assistant component that enables you to control your Philips Air Purifier devices.
 For now, it supports only older models that use the HTTP protocol for communication. CoAP support comming soon. :)
@@ -117,7 +117,7 @@ Sets the device used index(IAI or PM2.5)
 
 ## Meta
 
-**Georgi Gardev**
+Original author: **Georgi Gardev**
 
 - [gar.dev](https://gar.dev)
 - [![GitHub][github-icon]][github-link] [GeorgeSG][github-link]
@@ -125,10 +125,10 @@ Sets the device used index(IAI or PM2.5)
 
 [hacs-shield]: https://img.shields.io/badge/HACS-Custom-orange.svg
 [hacs-link]: https://github.com/hacs/integration
-[releases-shield]: https://img.shields.io/github/release/GeorgeSG/philips_airpurifier_http.svg
-[releases-link]: https://github.com/GeorgeSG/philips_airpurifier_http/releases
-[maintenance-shield]: https://img.shields.io/maintenance/yes/2024.svg
-[maintenance-link]: https://github.com/GeorgeSG/philips_airpurifier_http
+[releases-shield]: https://img.shields.io/github/v/release/Vortim/philips_airpurifier_http.svg
+[releases-link]: https://github.com/Vortim/philips_airpurifier_http/releases
+[maintenance-shield]: https://img.shields.io/maintenance/yes/2026.svg
+[maintenance-link]: https://github.com/Vortim/philips_airpurifier_http
 [github-icon]: http://i.imgur.com/9I6NRUm.png
 [github-link]: https://github.com/GeorgeSG/
 [twitter-icon]: http://i.imgur.com/wWzX9uB.png
