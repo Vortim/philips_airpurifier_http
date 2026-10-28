@@ -5,3 +5,5 @@ __pycache__
 devtools/
 dev.sh
 .idea/
+.pytest_cache/
+.DS_Store
