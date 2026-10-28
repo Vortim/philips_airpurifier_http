@@ -250,13 +250,12 @@ class PhilipsAirPurifierFan(FanEntity):
     async def async_turn_on(self, percentage=None, preset_mode=None, **kwargs) -> None:
         """Turn on the fan."""
 
-        values = {PHILIPS_POWER: "1"}
-        await self._async_set_values(values)
-
         if preset_mode is not None:
             await self.async_set_preset_mode(preset_mode)
-        elif percentage is not None:
+        elif percentage:
             await self.async_set_percentage(percentage)
+        else:
+            await self._async_set_values({PHILIPS_POWER: "1"})
 
     async def async_turn_off(self, **kwargs) -> None:
         """Turn off the fan."""
@@ -273,6 +272,9 @@ class PhilipsAirPurifierFan(FanEntity):
         speed_name = percentage_to_ordered_list_item(self._speed_names, percentage)
         speed = self._find_key(SPEED_MAP, speed_name)
         values = {PHILIPS_SPEED: speed}
+        if self._state != "on":
+            # The purifier ignores speed changes while it's off.
+            values[PHILIPS_POWER] = "1"
 
         if self._should_change_to_manual:
             values[PHILIPS_MODE] = self._find_key(MODE_MAP, MODE_MANUAL)
@@ -283,8 +285,10 @@ class PhilipsAirPurifierFan(FanEntity):
         """Set a preset mode on the fan."""
 
         if preset_mode in MODE_MAP.values():
-            philips_mode = self._find_key(MODE_MAP, preset_mode)
-            await self._async_set_values({PHILIPS_MODE: philips_mode})
+            values = {PHILIPS_MODE: self._find_key(MODE_MAP, preset_mode)}
+            if self._state != "on":
+                values[PHILIPS_POWER] = "1"
+            await self._async_set_values(values)
         else:
             _LOGGER.warning('Unsupported preset mode "%s"', preset_mode)
 
